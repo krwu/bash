@@ -11,6 +11,7 @@ NGINX="nginx-$NGINX_VERSION"
 LIBRESSL="libressl-2.6.0"
 ZLIB="zlib-1.2.11"
 PCRE="pcre-8.41"
+LIBRESSL_DIR=$(pwd)/source/$LIBRESSL
 
 function download {
     printf "Downloading source files...\n"
@@ -47,6 +48,13 @@ function extract {
     printf "Extract complete.\n"
 }
 
+function buildLibreSSL {
+    printf "Building libreSSL...\n"
+    cd $LIBRESSL
+    ./configure LDFLAGS=-lrt --prefix=${LIBRESSL_DIR}/.openssl/ && make install-strip -j $NB_PROC
+    printf "Building libreSSL complete.\n"
+}
+
 if [ ! -d "./source" ]; then
     mkdir ./source
 fi
@@ -56,3 +64,5 @@ cd ./source
 download
 
 extract
+
+buildLibreSSL
