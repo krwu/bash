@@ -114,7 +114,7 @@ function buildNginx {
     touch $LIBRESSL_DIR/.openssl/include/openssl/ssl.h
     make -j $(nproc) && make install
 
-    cp ../../
+    cd ../../
 
     cp files/nginx.service /lib/systemd/system/nginx.service
 
