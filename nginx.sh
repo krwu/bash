@@ -114,6 +114,11 @@ function buildNginx {
 
     cp files/nginx.service /lib/systemd/system/nginx.service
 
+    mkdir -p /etc/nginx/conf.d
+    rm -f /etc/nginx/conf.d/default.conf
+    cp -f files/nginx.conf /etc/nginx/nginx.conf
+    cp -f files/conf.d/0-default.conf /etc/nginx/conf.d/0-default.conf
+
     mkdir -p /var/cache/nginx
 
     cp ../../
