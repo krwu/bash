@@ -109,6 +109,7 @@ function buildNginx {
     --with-ld-opt="-lrt -ljemalloc -Wl,-z,relro -Wl,-E" \
     --with-cc-opt='-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -DTCP_FASTOPEN=23'
 
+    touch $LIBRESSL_DIR/.openssl/include/openssl/ssl.h
     make -j $(nproc) && make install
 
     cp files/nginx.service /lib/systemd/system/nginx.service
