@@ -114,6 +114,13 @@ function buildNginx {
     touch $LIBRESSL_DIR/.openssl/include/openssl/ssl.h
     make -j $(nproc) && make install
 
+    mkdir -p /var/cache/nginx
+    groupadd -g 1000 www
+    useradd -d /var/www/ -m -r -s /sbin/nologin -u 1000 -g www www
+    chown -R www:www /var/cache/nginx
+    cp -r html /var/www/html
+    chown -R www:www /var/www
+
     cd ../../
 
     cp files/nginx.service /lib/systemd/system/nginx.service
@@ -123,7 +130,7 @@ function buildNginx {
     cp -f files/nginx.conf /etc/nginx/nginx.conf
     cp -f files/conf.d/0-default.conf /etc/nginx/conf.d/0-default.conf
 
-    mkdir -p /var/cache/nginx
+
 
     systemctl enable nginx.service
     systemctl start nginx
