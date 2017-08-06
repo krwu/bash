@@ -4,7 +4,9 @@ yum -y install epel-release
 
 yum makecache fast
 
-yum -y install wget curl gcc gcc-c++ make autoconf cmake libtool libtool-libs zlib zlib-devel glib2 glib2-devel bzip2 bzip2-devel libevent libevent-devel jemalloc
+yum -y install wget curl gcc gcc-c++ make autoconf cmake libtool libtool-libs zlib zlib-devel glib2 glib2-devel bzip2 bzip2-devel libevent libevent-devel
+
+yum -y install jemalloc
 
 NGINX_VERSION="1.13.3"
 NGINX="nginx-$NGINX_VERSION"
@@ -106,11 +108,13 @@ function buildNginx {
     --with-pcre-jit \
     --with-zlib=../$ZLIB \
     --with-openssl=../$LIBRESSL \
-    --with-ld-opt="-lrt -ljemalloc -Wl,-z,relro -Wl,-E" \
+    --with-ld-opt="-lrt -ljemalloc" \
     --with-cc-opt='-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -DTCP_FASTOPEN=23'
 
     touch $LIBRESSL_DIR/.openssl/include/openssl/ssl.h
     make -j $(nproc) && make install
+
+    cp ../../
 
     cp files/nginx.service /lib/systemd/system/nginx.service
 
@@ -121,12 +125,10 @@ function buildNginx {
 
     mkdir -p /var/cache/nginx
 
-    cp ../../
-
     systemctl enable nginx.service
     systemctl start nginx
 
-    printr "Nginx has been installed and started. \nVisit http://$(hostname -i) to test.\n"
+    printf "Nginx has been installed and started. \nVisit http://$(hostname -i) to test.\n"
 
 }
 
