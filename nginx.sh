@@ -53,6 +53,73 @@ function buildLibreSSL {
     cd $LIBRESSL
     ./configure LDFLAGS=-lrt --prefix=${LIBRESSL_DIR}/.openssl/ && make install-strip -j $NB_PROC
     printf "Building libreSSL complete.\n"
+    cd ../
+}
+
+function buildNginx {
+    printf "Build and install nginx...\n"
+    cd $NGINX
+    ./configure \
+    --build=OC-Web \
+    --prefix=/usr/share/nginx \
+    --sbin-path=/usr/sbin/nginx \
+    --conf-path=/etc/nginx/nginx.conf \
+    --error-log-path=/var/log/nginx/error.log \
+    --http-log-path=/var/log/nginx/access.log \
+    --http-client-body-temp-path=/var/cache/nginx/client_temp \
+    --http-proxy-temp-path=/var/cache/nginx/proxy_temp \
+    --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
+    --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp \
+    --http-scgi-temp-path=/var/cache/nginx/scgi_temp \
+    --pid-path=/run/nginx.pid \
+    --lock-path=/run/lock/subsys/nginx \
+    --user=www \
+    --group=www \
+    --with-threads \
+    --with-file-aio \
+    --with-ipv6 \
+    --with-http_ssl_module \
+    --with-http_v2_module \
+    --with-http_realip_module \
+    --with-http_gunzip_module \
+    --with-http_gzip_static_module \
+    --with-http_slice_module \
+    --with-http_stub_status_module \
+    --with-http_sub_module \
+    --with-http_dav_module \
+    --with-http_flv_module \
+    --with-http_mp4_module \
+    --with-http_random_index_module \
+    --with-http_secure_link_module \
+    --with-http_auth_request_module \
+    --with-stream \
+    --with-stream_ssl_module \
+    --without-select_module \
+    --without-poll_module \
+    --without-http_geo_module \
+    --without-mail_pop3_module \
+    --without-mail_imap_module \
+     --without-mail_smtp_module \
+    --without-stream_geo_module \
+    --without-stream_map_module \
+    --with-pcre=../$PCRE \
+    --with-pcre-jit \
+    --with-zlib=../$ZLIB \
+    --with-openssl=../$LIBRESSL \
+    --with-ld-opt="-lrt -ljemalloc -Wl,-z,relro -Wl,-E" \
+    --with-cc-opt='-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -DTCP_FASTOPEN=23'
+
+    make -j $(nproc) && make install
+
+    cp files/nginx.service /lib/systemd/system/nginx.service
+
+    mkdir -p /var/cache/nginx
+
+    systemctl enable nginx.service
+    systemctl start nginx
+
+    printr "Nginx has been installed and started. \nVisit http://$(hostname -i) to test.\n"
+
 }
 
 if [ ! -d "./source" ]; then
