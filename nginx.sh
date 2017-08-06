@@ -116,6 +116,8 @@ function buildNginx {
 
     mkdir -p /var/cache/nginx
 
+    cp ../../
+
     systemctl enable nginx.service
     systemctl start nginx
 
@@ -134,3 +136,5 @@ download
 extract
 
 buildLibreSSL
+
+buildNginx
