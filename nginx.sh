@@ -12,8 +12,8 @@ LIBRESSL="libressl-2.6.0"
 ZLIB="zlib-1.2.11"
 PCRE="pcre-8.41"
 
-function dowload {
-    printf "Starting downloading source files...\n"
+function download {
+    printf "Downloading source files...\n"
 
     if [ ! -f "$NGINX.tar.gz" ]; then
         wget http://nginx.org/download/$NGINX.tar.gz
@@ -31,7 +31,20 @@ function dowload {
         wget https://ftp.pcre.org/pub/pcre/$PCRE.tar.gz
     fi
 
-    printf "Downloading complete."
+    printf "Downloading complete.\n"
+}
+
+function extract {
+    printf "Extracting source files...\n"
+    rm -rf $NGINX
+    tar zxf $NGINX.tar.gz
+    rm -rf $LIBRESSL
+    tar zxf $LIBRESSL.tar.gz
+    rm -rf $ZLIB
+    tar zxf $ZLIB.tar.gz
+    rm -rf $PCRE
+    tar zxf $PCRE.tar.gz
+    printf "Extract complete.\n"
 }
 
 if [ ! -d "./source" ]; then
@@ -39,3 +52,7 @@ if [ ! -d "./source" ]; then
 fi
 
 cd ./source
+
+download
+
+extract
