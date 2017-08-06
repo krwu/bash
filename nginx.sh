@@ -6,7 +6,7 @@ yum makecache fast
 
 yum -y install wget curl gcc gcc-c++ make autoconf cmake libtool libtool-libs zlib zlib-devel glib2 glib2-devel bzip2 bzip2-devel libevent libevent-devel
 
-yum -y install jemalloc
+yum -y install jemalloc jemalloc-devel
 
 NGINX_VERSION="1.13.3"
 NGINX="nginx-$NGINX_VERSION"
@@ -108,7 +108,7 @@ function buildNginx {
     --with-pcre-jit \
     --with-zlib=../$ZLIB \
     --with-openssl=../$LIBRESSL \
-    --with-ld-opt="-lrt -ljemalloc" \
+    --with-ld-opt="-lrt -ljemalloc -Wl,-z,relro -Wl,-E" \
     --with-cc-opt='-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -DTCP_FASTOPEN=23'
 
     touch $LIBRESSL_DIR/.openssl/include/openssl/ssl.h
