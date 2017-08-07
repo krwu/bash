@@ -115,8 +115,8 @@ function buildNginx {
     make -j $(nproc) && make install
 
     mkdir -p /var/cache/nginx
-    groupadd -g 1000 www
-    useradd -d /var/www/ -m -r -s /sbin/nologin -u 1000 -g www www
+    groupadd www
+    useradd -d /var/www/ -m -r -s /sbin/nologin -g www www
     chown -R www:www /var/cache/nginx
     cp -r html /var/www/html
     chown -R www:www /var/www
