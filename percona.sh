@@ -6,9 +6,11 @@ yum -y install Percona-Server-server-57 Percona-Server-client-57
 
 cp -f files/percona.cnf /etc/my.cnf
 
+echo "LD_PRELOAD=/usr/lib64/libjemalloc.so" > /etc/sysconfig/mysql
+
 mkdir -p /data/db
 
-mysqld --defaults-file=/etc/my.cnf --initialize-insecure --user=mysql
+INITIAL=`mysqld --defaults-file=/etc/my.cnf --user=mysql --initialize-insecure`
 
 systemctl enable mysqld
 systemctl start mysqld
