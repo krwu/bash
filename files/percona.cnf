@@ -10,6 +10,7 @@ socket=/dev/shm/mysql.sock
 datadir = /data/db/mysql
 log-error=/var/log/mysqld.log
 pid-file=/var/run/mysqld/mysqld.pid
+explicit_defaults_for_timestamp = true
 performance_schema = 0
 max_connections = 100
 max_connec_errors = 100000
