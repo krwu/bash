@@ -1,0 +1,42 @@
+[client]
+port	= 3306
+socket	= /dev/shm/mysql.sock
+default-character-set	= utf8
+# Percona Server template configuration
+
+[mysqld]
+bind-address=0.0.0.0
+socket=/dev/shm/mysql.sock
+datadir = /data/db/mysql
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+performance_schema = 0
+max_connections = 100
+max_connec_errors = 100000
+table_open_cache	= 200
+innodb_additional_mem_pool_size = 16M
+innodb_buffer_pool_size = 4G
+innodb_flush_log_at_trx_commit	= 2
+innodb_log_buffer_size  = 64M
+innodb_log_file_size	= 256M
+innodb_flush_method	= O_DIRECT
+innodb_autoinc_lock_mode = 2
+innodb_file_per_table = 1
+innodb_data_file_path = ibdata1:1G:autoextend
+skip-external-locking
+symbolic-links=0
+character-set-server	= utf8
+collation-server	= utf8_general_ci
+key_buffer_size	= 32M
+query_cache_size	= 32M
+query_cache_limit	= 512K
+expire_logs_days = 7
+thread_cache_size = 8
+
+[mysqld_safe]
+pid-file = /var/run/mysqld/mysqld.pid
+socket=/dev/shm/mysql.sock
+nice	= 0
+
+[isamchk]
+key_buffer	= 16M
