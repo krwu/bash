@@ -8,7 +8,7 @@ yum -y install wget curl gcc gcc-c++ make autoconf cmake libtool libtool-libs zl
 
 yum -y install jemalloc jemalloc-devel
 
-NGINX_VERSION="1.13.3"
+NGINX_VERSION="1.13.8"
 NGINX="nginx-$NGINX_VERSION"
 LIBRESSL="libressl-2.6.0"
 ZLIB="zlib-1.2.11"
