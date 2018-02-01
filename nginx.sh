@@ -11,8 +11,8 @@ yum -y install jemalloc jemalloc-devel
 NGINX_VERSION="1.13.8"
 NGINX="nginx-$NGINX_VERSION"
 LIBRESSL="libressl-2.6.0"
-ZLIB="zlib-1.2.11"
-PCRE="pcre-8.41"
+#ZLIB="zlib-1.2.11"
+#PCRE="pcre-8.41"
 LIBRESSL_DIR=$(pwd)/source/$LIBRESSL
 
 function download {
@@ -26,13 +26,13 @@ function download {
         wget https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/$LIBRESSL.tar.gz
     fi
 
-    if [ ! -f "$ZLIB.tar.gz" ]; then
-        wget https://zlib.net/$ZLIB.tar.gz
-    fi
+    #if [ ! -f "$ZLIB.tar.gz" ]; then
+    #    wget https://zlib.net/$ZLIB.tar.gz
+    #fi
 
-    if [ ! -f "$PCRE.tar.gz" ]; then
-        wget https://ftp.pcre.org/pub/pcre/$PCRE.tar.gz
-    fi
+    #if [ ! -f "$PCRE.tar.gz" ]; then
+    #    wget https://ftp.pcre.org/pub/pcre/$PCRE.tar.gz
+    #fi
 
     printf "Downloading complete.\n"
 }
@@ -43,10 +43,10 @@ function extract {
     tar zxf $NGINX.tar.gz
     rm -rf $LIBRESSL
     tar zxf $LIBRESSL.tar.gz
-    rm -rf $ZLIB
-    tar zxf $ZLIB.tar.gz
-    rm -rf $PCRE
-    tar zxf $PCRE.tar.gz
+    #rm -rf $ZLIB
+    #tar zxf $ZLIB.tar.gz
+    #rm -rf $PCRE
+    #tar zxf $PCRE.tar.gz
     printf "Extract complete.\n"
 }
 
@@ -104,12 +104,12 @@ function buildNginx {
      --without-mail_smtp_module \
     --without-stream_geo_module \
     --without-stream_map_module \
-    --with-pcre=../$PCRE \
+    --with-pcre=/usr \
     --with-pcre-jit \
-    --with-zlib=../$ZLIB \
+    --with-zlib=/usr \
     --with-openssl=../$LIBRESSL \
     --with-ld-opt="-lrt -ljemalloc -Wl,-z,relro -Wl,-E" \
-    --with-cc-opt='-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -DTCP_FASTOPEN=23'
+    --with-cc-opt='-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -DTCP_FASTOPEN=3'
 
     touch $LIBRESSL_DIR/.openssl/include/openssl/ssl.h
     make -j $(nproc) && make install
