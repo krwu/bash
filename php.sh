@@ -6,11 +6,11 @@ yum -y install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
 
 yum -y install yum-utils
 
-yum-config-manager --enable remi-php71
+yum-config-manager --enable remi-php72
 
 yum makecache fast && yum -y update
 
-yum -y install php-cli php-fpm php-opcache php-mbstring php-mysqlnd php-xml php-pecl-apcu php-pecl-redis php-pecl-memcached
+yum -y install php-cli php-fpm php-opcache php-mbstring php-mysqlnd php-xml php-pecl-apcu php-pecl-redis
 
 rm -rf /etc/php-fpm.d/*
 
