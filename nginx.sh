@@ -4,16 +4,14 @@ yum -y install epel-release
 
 yum makecache fast
 
-yum -y install wget curl gcc gcc-c++ make autoconf cmake libtool libtool-libs zlib zlib-devel glib2 glib2-devel bzip2 bzip2-devel libevent libevent-devel
+yum -y install wget curl gcc gcc-c++ make autoconf cmake libtool libtool-libs glib2 glib2-devel bzip2 bzip2-devel libevent libevent-devel
 
 yum -y install jemalloc jemalloc-devel
 
-NGINX_VERSION="1.13.8"
-NGINX="nginx-$NGINX_VERSION"
+NGINX="nginx-1.13.9"
 LIBRESSL="libressl-2.6.0"
-#ZLIB="zlib-1.2.11"
-#PCRE="pcre-8.41"
-LIBRESSL_DIR=$(pwd)/source/$LIBRESSL
+ZLIB="zlib-1.2.11"
+PCRE="pcre-8.41"
 
 function download {
     printf "Downloading source files...\n"
@@ -26,13 +24,13 @@ function download {
         wget https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/$LIBRESSL.tar.gz
     fi
 
-    #if [ ! -f "$ZLIB.tar.gz" ]; then
-    #    wget https://zlib.net/$ZLIB.tar.gz
-    #fi
+    if [ ! -f "$ZLIB.tar.gz" ]; then
+        wget https://zlib.net/$ZLIB.tar.gz
+    fi
 
-    #if [ ! -f "$PCRE.tar.gz" ]; then
-    #    wget https://ftp.pcre.org/pub/pcre/$PCRE.tar.gz
-    #fi
+    if [ ! -f "$PCRE.tar.gz" ]; then
+        wget https://ftp.pcre.org/pub/pcre/$PCRE.tar.gz
+    fi
 
     printf "Downloading complete.\n"
 }
@@ -43,19 +41,11 @@ function extract {
     tar zxf $NGINX.tar.gz
     rm -rf $LIBRESSL
     tar zxf $LIBRESSL.tar.gz
-    #rm -rf $ZLIB
-    #tar zxf $ZLIB.tar.gz
-    #rm -rf $PCRE
-    #tar zxf $PCRE.tar.gz
+    rm -rf $ZLIB
+    tar zxf $ZLIB.tar.gz
+    rm -rf $PCRE
+    tar zxf $PCRE.tar.gz
     printf "Extract complete.\n"
-}
-
-function buildLibreSSL {
-    printf "Building libreSSL...\n"
-    cd $LIBRESSL
-    ./configure LDFLAGS=-lrt --prefix=${LIBRESSL_DIR}/.openssl/ && make install-strip -j $NB_PROC
-    printf "Building libreSSL complete.\n"
-    cd ../
 }
 
 function buildNginx {
@@ -103,14 +93,14 @@ function buildNginx {
      --without-mail_smtp_module \
     --without-stream_geo_module \
     --without-stream_map_module \
-    --with-pcre=/usr \
+    --with-pcre=../$PCRE \
     --with-pcre-jit \
-    --with-zlib=/usr \
+    --with-zlib=../$ZLIB \
     --with-openssl=../$LIBRESSL \
     --with-ld-opt="-lrt -ljemalloc -Wl,-z,relro -Wl,-E" \
     --with-cc-opt='-O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches -m64 -mtune=generic -DTCP_FASTOPEN=3'
 
-    touch $LIBRESSL_DIR/.openssl/include/openssl/ssl.h
+    #touch $LIBRESSL_DIR/.openssl/include/openssl/ssl.h
     make -j $(nproc) && make install
 
     mkdir -p /var/cache/nginx
@@ -148,6 +138,6 @@ download
 
 extract
 
-buildLibreSSL
+#buildLibreSSL
 
 buildNginx
