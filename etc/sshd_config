@@ -1,0 +1,26 @@
+Port 6571
+AddressFamily inet
+Protocol 2
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+SyslogFacility AUTHPRIV
+PermitRootLogin no
+AuthorizedKeysFile      .ssh/authorized_keys
+PasswordAuthentication yes
+ChallengeResponseAuthentication no
+GSSAPIAuthentication no
+GSSAPICleanupCredentials no
+GSSAPIStrictAcceptorCheck no
+GSSAPIKeyExchange no
+GSSAPIEnablek5users no
+UsePAM yes
+X11Forwarding yes
+TCPKeepAlive yes
+UsePrivilegeSeparation sandbox          # Default for new installations.
+ClientAliveInterval 60
+UseDNS no
+AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGESAcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT
+AcceptEnv LC_IDENTIFICATION LC_ALL LANGUAGE
+AcceptEnv XMODIFIERS
+Subsystem       sftp    /usr/libexec/openssh/sftp-server
