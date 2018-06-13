@@ -107,7 +107,7 @@ function buildNginx {
     groupadd www
     useradd -d /var/www/ -m -r -s /sbin/nologin -g www www
     chown -R www:www /var/cache/nginx
-    cp -r html /var/www/html
+    cp -r html/ /var/www/html/
     chown -R www:www /var/www
 
     cd ../../
