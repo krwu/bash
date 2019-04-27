@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+set -e
+
 yum -y install epel-release
 
 yum makecache fast
